@@ -15,10 +15,3 @@ Software en funcionamiento: www.bygdle.xyz/proyectos/TilesetManager.
 
 ## Librerías de terceros
 [JSZip.js](http://stuk.github.io/jszip/). Para comprimir las imágenes en un archivo _zip_.
-
-
-# Instrucciones de uso
-
-## 1. Interfaz
-
-![Interfaz del programa](https://www.bygdle.xyz/proyectos/TilesetManager/guia/img/interfaz.png)
