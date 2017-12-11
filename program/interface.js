@@ -21,6 +21,8 @@ window.addEventListener('load', function() {
 
 
     add_tileset_dialog = function() {
+    //Abrir un diálogo que permita cargar UNA SOLA imagen
+    //como tileset y dividirla
         var dialog = new FileDialog('.png, .jpeg');
         dialog.response(function(file) {
             
@@ -35,33 +37,30 @@ window.addEventListener('load', function() {
             }
 
             readFileAsURL(file, function(reader) {
-
-                
-
+            //Leer el contenido de la imagen leída
                 var image = new Image();
                     image.src = reader.result;
 
                 image.addEventListener('error', function() {
-                    
+                //En caso de error
                     this.error = true; //Guardar si se ha producido algún error
                 });
                 image.addEventListener('load', function() {
-
-                    
-
+                //Al cargar completamente
                     if(this.error) //Si ha habido algún error, detener ejecución
                         return;
 
-                    var self = this;
+                    var self = this; //Alias del objeto actual
 
                     openSplitImageDialog(this, function(data) {
                     
 
-                        var results = image_split(self, data);
+                        var results = image_split(self, data); //Obtener división de la imagen
                         var images = [];
                         var loaded = 0;
 
                         results.forEach(function(dataurl) {
+                        //Recorrer divisiones y añadirlas al Workspace
                             var image = add_image(dataurl);
                             images.push(image);
                             image.image.addEventListener('load', function() {
@@ -73,7 +72,6 @@ window.addEventListener('load', function() {
                         });
 
                         function doAfterSplit() {
-                            
                             AppendImages(images);
                         }
 
@@ -86,13 +84,12 @@ window.addEventListener('load', function() {
     }
 
     add_image_dialog = function() {
-        
+    //Abrir un cuadro de diálogo para cargar VARIAS imágenes individuales al Workspace
         var dialog = new FileDialog('.png, .jpg', true);
         var Files = [];
         var loaded = 0;
 
         dialog.response(function(files) {
-        
         //Leer todos los archivos que se han cargado
 
             files.forEach(function(file) {
@@ -124,22 +121,25 @@ window.addEventListener('load', function() {
     }
 
     export_tileset_dialog = function() {
-
+    //Exportar todas las imágenes como un solo tileset
         openExportTilesetDialog(IMAGES, cur_size.w, cur_size.h);
 
     }
     export_zip_dialog = function() {
+    //Exportat todas las imágenes individualmente en un .zip
+    //Usando la librería JSZip.JS.
         var zip = new JSZip();
         IMAGES.forEach(function(image, i) {
             var b64 = image.toDataURL('image/png').replace(/^data:image\/png;base64,/i, '');
             zip.file('image' + i + '.png', b64, {base64: true});
         });
         zip.generateAsync({type: 'base64'}).then(function(content) {
-            window.location.href = 'data:application/zip;base64,' + content;
+            saveFileBase64('data:application/zip;base64,' + content, 'images.zip');
         });
     }
 
     change_size_dialog = function() {
+    //Abrir el diálogo para modificar el tamaño de las imágenes
         if(IMAGES.length)
             openChangeSizeDialog(function(action, option) {
                 
@@ -166,6 +166,7 @@ window.addEventListener('load', function() {
 
         image_array.forEach(function(image) {
 
+            //Buscar el tamaño mayor y menor
             if(image.width < min_size.w)
                 min_size.w = image.width;
             if(image.height < min_size.h)
@@ -176,6 +177,7 @@ window.addEventListener('load', function() {
             if(image.height > max_size.h)
                 max_size.h = image.height;
 
+            //Añadir las imágenes, revisar si los tamaños coinciden o no
             if(/*!is_first*/true) {
 
                 if(cur_size.w && cur_size.h)
@@ -189,6 +191,8 @@ window.addEventListener('load', function() {
             images.push(image);
         });
 
+        //Si los tamaños no coinciden, abrir el diálogo correspondiente
+        //para ajustarlos.
         if(bad_size) {
             openChooseSizeDialog(function(action, option, is_first) {
 
@@ -202,6 +206,7 @@ window.addEventListener('load', function() {
 
             }, is_first);
         }
+        //Si los tamaños coinciden, añadir directamente las imágenes
         else {
             add_all();
             subimg_numb.innerText = IMAGES.length.toString();
@@ -428,7 +433,8 @@ window.addEventListener('load', function() {
         //Obtener todos los <input type="radio"> y recorrerlos
         var inputs = document.querySelectorAll('input[type="radio"]');
         inputs.forEach(function(input) {
-
+        //Añadir el evento change a cada input para
+        //actualizar las opciones
             if(input.checked)
                 options[input.name] = input.value;
             input.addEventListener('change', function() {
@@ -443,6 +449,7 @@ window.addEventListener('load', function() {
 
 
         function doAfterCheck() {
+        //La revisión que se hará después de cada cambio en las opciones
             if(!is_first) {
                 isnofirst.style.display = '';
             }
@@ -456,12 +463,14 @@ window.addEventListener('load', function() {
         }
         doAfterCheck();
 
-        var buttons = document.choose_option.getElementsByTagName('button');
+        var buttons = document.choose_option.getElementsByTagName('button'); //Todos los botones
         buttons.forEach(function(button, i) {
-            if(i > 8)
+            if(i > 8) //Actuar sólo con los 9 primeros botones (los de la alineación)
                 return;
 
             button.onclick = function(ev) {
+            //Al clickear un botón, añadirle el atributo checked y eliminarlo
+            //de los demás botones
                 ev.preventDefault();
                 buttons.forEach(function(button, i) {
                     if(i > 8)
@@ -473,18 +482,20 @@ window.addEventListener('load', function() {
             }
         });
         buttons[9].onclick = function(ev) {
-            dialog.style.display = 'none';
-            ev.preventDefault();
+        //Al hacer clic en el botón de Aceptar.
+            dialog.style.display = 'none'; //Ocultar diálogo
+            ev.preventDefault(); //Evitar evento por defecto
 
-            var align = document.choose_option.querySelector('button[checked]').value.toInteger();
+            var align = document.choose_option.querySelector('button[checked]').value.toInteger(); //Obtener el valor de la alineación
             var result = [
 
-                options['action'].toInteger(),
-                options['action2'].toInteger(),
-                [align%3, Math.floor(align/3)]
+                options['action'].toInteger(), //Acción 1: Tamaño a escoger (mayor, menor, actual)
+                options['action2'].toInteger(), //Acción 2: Escala a escoger (estirar, mantener)
+                [align%3, Math.floor(align/3)] //Alineación: Horizontal (0, 1, 2) y vertical (0, 1, 2)
 
             ];
             callback(result, {
+                //Las opciones. Un simple alias para hacerlas legibles
                 size: {max: 0, min: 1, last: 2},
                 scale: { stretch: 0, keep: 1 },
                 halign: {
@@ -507,27 +518,37 @@ window.addEventListener('load', function() {
     //image: recurso <img> a dividir
     //callback: función que se ejecutará al recibir respuesta
 
+
+        //Obtener todos los elementos necesarios
         const view_tileset = document.getElementById('view-tileset');
         const view_render = view_tileset.getContext('2d');
 
+        //El tamaño del canvas = el tamaño del tileset
         view_tileset.width = image.width;
         view_tileset.height = image.height;
 
+        //Hacer visible el cuadro de diálogo
         const dialogbox = document.getElementById('split-tileset');
             dialogbox.style.display = '';
 
+        //Obtener inputs y en su evento input (cambiar contenido) actualizar
+        //la rejilla del tileset.
         const inputs = dialogbox.getElementsByTagName('input');
             inputs.forEach(function(input) {
                 input.oninput = drawGrid;
             });
 
+
+        //Obtener botones
         const buttons = dialogbox.getElementsByTagName('button');
             buttons[0].onclick = function() {
-
+                //El primer botón sólo cierra el cuadro de diálogo
                 view_render.clearRect(0, 0, image.width, image.height);
                 dialogbox.style.display = 'none';
             }
             buttons[1].onclick = function() {
+                //El segundo botón cierra el cuadro de diálogo y llama el callback,
+                //con las opciones escogidas por el usuario
                 dialogbox.style.display = 'none';
                 callback( {
 
@@ -549,7 +570,8 @@ window.addEventListener('load', function() {
             };
 
 
-        function drawGrid() {           
+        function drawGrid() {         
+        //Dibujar la cuadrícula encima de la imagen del tileset  
             view_render.clearRect(0, 0, image.width, image.height);
             view_render.drawImage( image, 0, 0 );
 
@@ -589,23 +611,30 @@ window.addEventListener('load', function() {
 
 
     function openExportTilesetDialog(imagelist, width, height) {
+    //Cuadro de diálogo para exportar tileset.
+    //Toma una lista de imágenes y las convierte en una sola (tileset)
         if(!(imagelist instanceof Array))
             return;
 
+        //Cargar elementos necesarios
         const view_tileset = document.getElementById('view-tileset');
         const view_render = view_tileset.getContext('2d');
 
         const dialogbox = document.getElementById('split-tileset');
             dialogbox.style.display = '';
 
+        //Redibujar tileset al cambiar valores
         const inputs = dialogbox.getElementsByTagName('input');
             inputs.forEach(function(input) {
                 input.oninput = drawGrid;
             });
 
+        //Cambiar el texto del diálogo
         dialogbox.getElementsByTagName('tr')[12].style.display = 'none';
         dialogbox.getElementsByTagName('h2')[0].innerText = 'Exportar tileset';
 
+        //Tamaño de imágenes y número de imágenes
+        //serán read-only.
         inputs[0].readOnly = true;
         inputs[0].value = imagelist.length;
 
@@ -617,6 +646,7 @@ window.addEventListener('load', function() {
 
         const buttons = dialogbox.getElementsByTagName('button');
             buttons[0].onclick = function() {
+                //Volver inputs y textos a su estado original, para cerrar el diálogo.
                 inputs[0].readOnly = false;
                 inputs[2].readOnly = false;
                 inputs[3].readOnly = false;
@@ -626,6 +656,8 @@ window.addEventListener('load', function() {
                 dialogbox.getElementsByTagName('h2')[0].innerText = 'Importar tileset';
             }
             buttons[1].onclick = function() {
+                //Volver inputs y textos a su estado original, cerrar el diálogo
+                //y guardar archivo
                 inputs[0].readOnly = false;
                 inputs[2].readOnly = false;
                 inputs[3].readOnly = false;
@@ -639,7 +671,7 @@ window.addEventListener('load', function() {
 
 
         function drawGrid() {
-
+        //Dibujar tileset resultante.
             view_render.clearRect(0, 0, width, height);
 
             var tiles_by_row = inputs[1].value.toInteger();
@@ -671,20 +703,23 @@ window.addEventListener('load', function() {
     }
 
     function openChangeSizeDialog(callback) {
-
+    //Cuadro de diálogo para cambiar el tamaño de las imágenes
         const dialogbox = document.getElementById('change-size');
         const inputs = dialogbox.querySelectorAll('input[type="number"]');
         const select = dialogbox.querySelectorAll('input[type="radio"]');
         const button = dialogbox.getElementsByTagName('button');
         const if_keep = dialogbox.getElementsByClassName('just-if-keep')[0];
 
-            dialogbox.style.display = '';
+            dialogbox.style.display = ''; //Mostrar diálogo
+
+            //EL valor por defecto de los inputs es el tamaño actual
             inputs[0].value = cur_size.w;
             inputs[1].value = cur_size.h;
 
         var action = 0;
 
         function onChange() {
+        //Ocultar o mostrar cuadro de alineación dependiendo de la opción
             if(select[1].checked)
                 if_keep.style.display = '';
             else
@@ -693,6 +728,7 @@ window.addEventListener('load', function() {
         onChange();
 
 
+        //Cambiar la acción dependiendo de la opción que se escoja.
         select.forEach(function(e) {
             e.onchange = function() {
                 onChange();
@@ -703,6 +739,7 @@ window.addEventListener('load', function() {
         });
 
         button.forEach(function(b, i) {
+        //Selección de alineación.
             if(i > 8)
                 return;
 
