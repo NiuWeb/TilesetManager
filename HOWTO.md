@@ -14,6 +14,6 @@
 ### NOTA:
 Todas las subimágenes deben tener el mismo tamaño. Si alguna imagen nueva tiene un tamaño diferente a las imágenes ya existentes, se abrirá un cuadro de diálogo en el que se podrá escoger cómo ajustarlas para mantenerlas todas iguales.
 
-![Escoger tamaño](https://www.bygdle.xyz/proyectos/TilesetManager/guia/img/importar_tileset.png)
+![Escoger tamaño](https://www.bygdle.xyz/proyectos/TilesetManager/guia/img/escoger_tamano.png)
 
 Los nueve botones verdes representan la posición en la que se deberán colocar las imágenes.
