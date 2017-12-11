@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TilesetManager 1.0</title>
+	<link rel="stylesheet" type="text/css" href="styles/main.css">
+	<link rel="stylesheet" type="text/css" href="styles/dialogs.css">
+	<link rel="stylesheet" type="text/css" href="styles/flexboxes.css">
+	<meta charset="utf-8">
+</head>
+<body>
+
+	
+<div id="main-box" class="flexbox direction-column">
+	<div id="toolbar">
+		<img 
+			class="button" 
+			src="media/add_tileset.png" 
+			title="Añadir tileset" 
+			alt="Añadir tileset"
+			onclick="add_tileset_dialog();"
+		>
+
+		<span style="margin-left: 1em;"></span>
+
+		<img 
+			class="button" 
+			src="media/add_image.png" 
+			title="Añadir imágenes individuales" 
+			alt="Añadir imagen"
+			onclick="add_image_dialog()"
+		>
+
+
+		<div style="float:right">
+			
+			<img 
+				src="media/export_tileset.png" 
+				alt="Exportar tileset" 
+				class="button"
+				title="Exportar tileset"
+				onclick="export_tileset_dialog()" 
+			>
+
+			<span style="margin-left: 1em"></span>
+
+			<img 
+				src="media/export_image.png" 
+				alt="Exportar zip de imágenes" 
+				class="button"
+				title="Exportar zip de imágenes"
+				onclick="export_zip_dialog()" 
+			>
+
+		</div>
+	</div>
+
+	<div id="box-container">
+
+		<div id="workspace" style="display: none;"></div>
+
+		<div id="empty-workspace-alert" 
+		class="flexbox align-center justify-center" 
+		style="height: 100%; pointer-events: none;">
+
+			<em style="pointer-events: none; text-align: center;">
+				<h2 style="margin:0;font-weight: normal;">Espacio de trabajo vacío.</h2>
+				Utiliza los controles de la barra de herramientas para
+				comenzar a añadir subimágenes.
+			</em>
+		</div>
+
+	</div>
+
+	<div style="border-top: 1px solid #333; background-color: #CCC; padding: 0 1em;">
+		Subimágenes: <span id="subimg-numb">0</span>
+		<span id="subimg-select" style="margin-left: 1em"></span>
+		<div onclick="change_size_dialog()" style="float: right; cursor: pointer;" id="subimg-size"></div>
+	</div>
+</div>
+
+
+<div id="choose-size" class="dialog-box flexbox justify-center align-center" style="display: none">
+	<div class="pop-up">
+		<!-- 
+		Cuadro de diálogo para escoger qué tamaño se
+		mantendrá si se cargan imágenes con distinto tamaño -->
+
+		<h2 style="margin: 0; text-align: center;">Alerta</h2>
+		Las imágenes tienen tamaños distintos, ¿qué desea hacer?
+		<form name="choose_option">
+			<fieldset>
+				<legend>Tamaño</legend>
+				<input checked type="radio" name="action" value="0"> 
+				Cambiar el tamaño de todas las imágenes al <strong>mayor</strong>
+				de las subimágenes.
+				<br><br>
+				<input type="radio" name="action" value="1">
+				Cambiar el tamaño de todas las imágenes al <strong>menor</strong> de
+				las subimágenes.
+				<br><br>
+				<div class="is-no-first" style="display: none">
+					<input type="radio" name="action" value="2">
+					Dejar el tamaño actual.
+					<br><br>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend>Escala</legend>
+				<input checked type="radio" name="action2" value="0">
+				Ajustar todas las imágenes al tamaño establecido.
+				<br><br>
+				<input type="radio" name="action2" value="1">
+				Mantener el tamaño de cada imagen.
+				<div class="just-if-keep" style="display: none">
+					Alineación:
+					<div class="flexbox justify-center">
+						<table class="align-buttons">
+							<tr>
+								<td><button value="0"></button></td>
+								<td><button value="1"></button></td>
+								<td><button value="2"></button></td>
+							</tr>
+							<tr>
+								<td><button value="3"></button></td>
+								<td><button value="4" checked></button></td>
+								<td><button value="5"></button></td>
+							</tr>
+							<tr>
+								<td><button value="6"></button></td>
+								<td><button value="7"></button></td>
+								<td><button value="8"></button></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</fieldset>
+			<div class="flexbox justify-center">
+				<button>Aceptar</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="change-size" class="dialog-box flexbox justify-center align-center" style="display: none">
+	<div class="pop-up">
+		<!-- 
+		Cuadro de diálogo para escoger qué tamaño se
+		mantendrá si se cargan imágenes con distinto tamaño -->
+
+		<h2 style="margin: 0; text-align: center;">Cambiar tamaño</h2>
+			<fieldset>
+				<legend>Tamaño</legend>
+
+				<table>
+					<tr>
+						<td>Nuevo anchor <small>(px)</small>:</td>
+						<td><input type="number" min="0" pattern="^[0-9]+$"></td>
+					</tr>
+					<tr>
+						<td>Nueva altura <small>(px)</small>:</td>
+						<td><input type="number" min="0" pattern="^[0-9]+$"></td>
+					</tr>
+				</table>
+
+			</fieldset>
+
+			<fieldset>
+				<legend>Escala</legend>
+				<input checked type="radio" name="action" value="0">
+				Ajustar todas las imágenes al tamaño establecido.
+				<br><br>
+				<input type="radio" name="action" value="1">
+				Mantener el tamaño de cada imagen.
+				<div class="just-if-keep" style="display: none">
+					Alineación:
+					<div class="flexbox justify-center">
+						<table class="align-buttons">
+							<tr>
+								<td><button value="0"></button></td>
+								<td><button value="1"></button></td>
+								<td><button value="2"></button></td>
+							</tr>
+							<tr>
+								<td><button value="3"></button></td>
+								<td><button value="4" checked></button></td>
+								<td><button value="5"></button></td>
+							</tr>
+							<tr>
+								<td><button value="6"></button></td>
+								<td><button value="7"></button></td>
+								<td><button value="8"></button></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</fieldset>
+			<div class="flexbox justify-center" style="margin-top: 1em">
+				<button>Aceptar</button>
+			</div>
+	</div>
+</div>
+
+
+<div id="split-tileset" class="dialog flexbox align-top" style="display: none;">
+	
+
+	<div id="preview-tileset">
+		<canvas class="subimage" id="view-tileset" style="float: left; margin:0"></canvas>
+	</div>
+
+	<div style="width: 40%; min-width: 410px">
+		<div style="text-align: right;">
+			<button class="alert">Cerrar</button>
+		</div>
+
+
+		<fieldset style="margin: 1em">
+			<legend><h2 style="margin:0">Importar tileset</h2></legend>
+
+			<table id="tileset-prop">
+				<tr>
+					<td>Número de divisiones:</td>
+					<td>
+						<input type="number" value="1" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td>Divisiones por fila:</td>
+					<td>
+						<input type="number" value="1" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><hr></td>
+				</tr>
+				<tr>
+					<td>Anchor <small>(px)</small> de cada división:</td>
+					<td>
+						<input type="number" value="32" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td>Altura <small>(px)</small> de cada división:</td>
+					<td>
+						<input type="number" value="32" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><hr></td>
+				</tr>
+				<tr>
+					<td>Separación horizontal <small>(px)</small> entre divisiones:</td>
+					<td>
+						<input type="number" value="0" min="0">
+					</td>
+				</tr>
+				<tr>
+					<td>Separación vertical <small>(px)</small> entre divisiones:</td>
+					<td>
+						<input type="number" value="0" min="0">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><hr></td>
+				</tr>
+				<tr>
+					<td>Origen horizontal <small>(px)</small> de las divisiones:</td>
+					<td>
+						<input type="number" value="0" min="0">
+					</td>
+				</tr>
+				<tr>
+					<td>Origen vertical <small>(px)</small> de las divisiones:</td>
+					<td>
+						<input type="number" value="0" min="0">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><hr></td>
+				</tr>
+				<tr>
+					<td>Color de la rejilla:</td>
+					<td><input type="color"></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">
+						<button>Aceptar</button>
+					</td>
+				</tr>
+			</table>
+
+		</fieldset>
+	</div>
+
+</div>
+
+
+<script type="text/javascript" src="program/prototypes.js"></script>
+<script type="text/javascript" src="program/editor.js"></script>
+<script type="text/javascript" src="program/files.js"></script>
+<script type="text/javascript" src="program/interface.js"></script>
+<script type="text/javascript" src="program/jszip.js"></script>
+</body>
+</html>

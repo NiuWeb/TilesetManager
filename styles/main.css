@@ -1,0 +1,95 @@
+*{box-sizing: border-box;}
+html, body {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+body {
+	margin: 0;
+	font: 13pt Calibri;
+	color: #333;
+	background-color: #E7E7E7;
+}
+#main-box {
+	height: 100%;
+}
+#toolbar {
+	background-color: #1E9203;
+	padding: 0.5em;
+	border-bottom: 2px solid #216A04;
+	color: white;
+}
+#box-container, #workspace {
+	height: 100%;
+	overflow: auto;
+}
+
+button {
+	background-color: #2BBE20;
+	font: inherit;
+	color: white;
+
+	padding:0.3em 0.6em;
+
+	border: none;
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	-o-border-radius: 16px;
+	border-radius: 16px;
+}
+button.alert {
+	background-color: #F73F3F
+}
+button:hover {
+	background-color: #0CA600;
+}
+button.alert:hover {
+	background-color: red;
+}
+
+button:hover, a:hover, .button:hover {
+	cursor: pointer;
+}
+
+hr {
+	border:1px solid #CCC;
+}
+
+
+.align-buttons button {
+	width: 32px;
+	height: 32px;
+}
+.align-buttons button[checked] {
+	border: 1px solid #0072FF;
+}
+.just-if-keep {
+	margin-left: 1em;
+}
+.subimage {
+	float: left;
+	border:1px solid black;
+	background-image: url(../media/transparency.png);
+	display: inline-block;
+}
+.subimage-box {
+	display: inline-block;
+	padding: 0.5em;
+}
+.subimage-box.selected {
+	background-color: #5FC993;
+}
+
+#preview-tileset {
+	width:60%; 
+	min-width: 1000px; 
+	height: 100%; 
+	border:1px solid #CCC; 
+	overflow: auto;
+}
+#tileset-prop tr td:nth-child(1) {
+	padding-right: 1em;
+}
+#tileset-prop input {
+	width: 56px;
+}

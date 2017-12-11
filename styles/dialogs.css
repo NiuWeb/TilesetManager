@@ -1,0 +1,23 @@
+.dialog-box, .dialog {
+	position: fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+
+	z-index: 10000;
+
+	overflow: auto;
+}
+.dialog-box {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+.dialog-box .pop-up {
+	max-width: 512px;
+	display: inline-block;
+}
+.dialog-box .pop-up, .dialog {
+	background-color: #EEE;
+	border:1px solid #CCC;
+	padding: 1em;
+}
