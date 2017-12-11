@@ -11,5 +11,7 @@ El proyecto está en fase beta, por lo que en futuras actualizaciones es posible
 
 Autor: Daniel Felipe García (@Bygdle) www.bygdle.xyz.
 
+Software en funcionamiento: www.bygdle.xyz/proyectos/TilesetManager.
+
 
 # Instrucciones de uso
