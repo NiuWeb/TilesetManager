@@ -15,3 +15,8 @@ Software en funcionamiento: www.bygdle.xyz/proyectos/TilesetManager.
 
 ## Librerías de terceros
 [JSZip.js](http://stuk.github.io/jszip/). Para comprimir las imágenes en un archivo _zip_.
+
+## Instrucciones
+La interfaz del programa es auto-explicativa.
+
+Se pueden seleccionar subimágenes presionando _Shift_ y haciendo clic en ellas (si se hace clic en una que ya está seleccionada, ésta se descartará de la selección). Se puede presionar la tecla _Supr_ para eliminar permanentemente las subimágenes seleccionadas.
