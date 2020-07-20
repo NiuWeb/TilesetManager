@@ -9,9 +9,7 @@ El programa aún está en fase beta, y debido a que depende en su gran mayoría 
 El proyecto está en fase beta, por lo que en futuras actualizaciones es posible que se solucionen ciertos problemas de compatibilidad.
 
 
-Autor: Daniel Felipe García (@Bygdle) www.bygdle.xyz.
-
-Software en funcionamiento: www.bygdle.xyz/proyectos/TilesetManager.
+Autor: Daniel Felipe García (@Bygdle)
 
 ## Librerías de terceros
 [JSZip.js](http://stuk.github.io/jszip/). Para comprimir las imágenes en un archivo _zip_.
